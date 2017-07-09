@@ -29,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
     /* Fields that will store our EditText and Button */
     private EditText mNameEntry;
     private Button mDoSomethingCoolButton;
+    private Button mSortTopRated;
+    private Button mSortPopular;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
          */
         mDoSomethingCoolButton = (Button) findViewById(R.id.b_do_something_cool);
         mNameEntry = (EditText) findViewById(R.id.et_text_entry);
+        mSortTopRated = (Button) findViewById(R.id.b_top_rated);
+        mSortPopular = (Button) findViewById(R.id.b_popular);
 
         /* Setting an OnClickListener allows us to do something when this button is clicked. */
         mDoSomethingCoolButton.setOnClickListener(new OnClickListener() {
@@ -51,38 +55,64 @@ public class MainActivity extends AppCompatActivity {
              *
              * @param v The view that is clicked. In this case, it's mDoSomethingCoolButton.
              */
+
             @Override
             public void onClick(View v) {
                 // TODO OK (1) Retrieve the text from the EditText and store it in a variable
                 String textEntered = mNameEntry.getText().toString();
 
-
-                /*
-                 * Storing the Context in a variable in this case is redundant since we could have
-                 * just used "this" or "MainActivity.this" in the method call below. However, we
-                 * wanted to demonstrate what parameter we were using "MainActivity.this" for as
-                 * clear as possible.
-                 */
                 Context context = MainActivity.this;
 
-                /* This is the class that we want to start (and open) when the button is clicked. */
                 Class destinationActivity = ChildActivity.class;
 
-                /*
-                 * Here, we create the Intent that will start the Activity we specified above in
-                 * the destinationActivity variable. The constructor for an Intent also requires a
-                 * context, which we stored in the variable named "context".
-                 */
                 Intent startChildActivityIntent = new Intent(context, destinationActivity);
 
-                // TODO OK (2) Use the putExtra method to put the String from the EditText in the Intent
                 startChildActivityIntent.putExtra(Intent.EXTRA_TEXT, textEntered);
 
+                startActivity(startChildActivityIntent);
+            }
+        });
+        mSortTopRated.setOnClickListener(new OnClickListener() {
 
-                /*
-                 * Once the Intent has been created, we can use Activity's method, "startActivity"
-                 * to start the ChildActivity.
-                 */
+            /**
+             *  Catatan tombol Top Rated
+             * */
+
+            @Override
+            public void onClick(View v) {
+                // TODO OK (1) Retrieve the text from the EditText and store it in a variable
+                String textEntered = mNameEntry.getText().toString();
+
+                Context context = MainActivity.this;
+
+                Class destinationActivity = ChildActivity.class;
+
+                Intent startChildActivityIntent = new Intent(context, destinationActivity);
+
+                startChildActivityIntent.putExtra(Intent.EXTRA_TEXT, textEntered);
+
+                startActivity(startChildActivityIntent);
+            }
+        });
+        mSortPopular.setOnClickListener(new OnClickListener() {
+
+            /**
+             *  Catatan tombol Popular
+             * */
+
+            @Override
+            public void onClick(View v) {
+                // TODO OK (1) Retrieve the text from the EditText and store it in a variable
+                String textEntered = mNameEntry.getText().toString();
+
+                Context context = MainActivity.this;
+
+                Class destinationActivity = ChildActivity.class;
+
+                Intent startChildActivityIntent = new Intent(context, destinationActivity);
+
+                startChildActivityIntent.putExtra(Intent.EXTRA_TEXT, textEntered);
+
                 startActivity(startChildActivityIntent);
             }
         });
