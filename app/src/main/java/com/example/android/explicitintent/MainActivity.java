@@ -53,10 +53,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        final GridView gridview = (GridView) findViewById(R.id.gridview);
+        gridview.setAdapter(new ImageAdapter(this));
+        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                Intent i = new Intent(getApplicationContext(), FullImageActivity.class);
+                i.putExtra("id", position);
+                startActivity(i);
+            }
+        });
 
         // show The Image in a ImageView
-        new DownloadImageTask((ImageView) findViewById(R.id.imageView1))
-                .execute("https://image.tmdb.org/t/p/w320/5qcUGqWoWhEsoQwNUrtf3y3fcWn.jpg");
+        //new DownloadImageTask((ImageView) findViewById(R.id.imageView1))
+        //        .execute("https://image.tmdb.org/t/p/w320/5qcUGqWoWhEsoQwNUrtf3y3fcWn.jpg");
 
         // public void onClick(View v) {
         //     startActivity(new Intent(this, IndexActivity.class));
@@ -73,54 +82,28 @@ public class MainActivity extends AppCompatActivity {
         //gridAdaptor i = new gridAdaptor(getActivity());
         //gridview.setAdapter(i);
 
-        GridView m_gridview = (GridView) findViewById(R.id.movies_gridview);
+        //GridView m_gridview = (GridView) findViewById(R.id.movies_gridview);
         //m_gridview.setAdapter(new ImageAdapter(this));
 
-        m_gridview.setOnItemClickListener(new OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,
-                                    int position, long id) {
-                Toast.makeText(MainActivity.this, "" + position,
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
+        //m_gridview.setOnItemClickListener(new OnItemClickListener() {
+        //    public void onItemClick(AdapterView<?> parent, View v,
+         //                           int position, long id) {
+         //       Toast.makeText(MainActivity.this, "" + position,
+         //               Toast.LENGTH_SHORT).show();
+         //   }
+        //});
 
         /*
          * Using findViewById, we get a reference to our Button from xml. This allows us to
          * do things like set the onClickListener which determines what happens when the button
          * is clicked.
          */
-        mDoSomethingCoolButton = (Button) findViewById(R.id.b_do_something_cool);
         mNameEntry = (EditText) findViewById(R.id.et_text_entry);
         mSortTopRated = (Button) findViewById(R.id.b_top_rated);
         mSortPopular = (Button) findViewById(R.id.b_popular);
 
         /* Setting an OnClickListener allows us to do something when this button is clicked. */
-        mDoSomethingCoolButton.setOnClickListener(new OnClickListener() {
 
-            /**
-             * The onClick method is triggered when this button (mDoSomethingCoolButton) is clicked.
-             *
-             * @param v The view that is clicked. In this case, it's mDoSomethingCoolButton.
-             */
-
-            @Override
-            public void onClick(View v) {
-                // TODO OK (1) Retrieve the text from the EditText and store it in a variable
-                String textEntered = mNameEntry.getText().toString();
-                String cDion = " ";
-
-                Context context = MainActivity.this;
-
-                Class destinationActivity = ChildActivity.class;
-
-                Intent startChildActivityIntent = new Intent(context, destinationActivity);
-
-                startChildActivityIntent.putExtra(Intent.EXTRA_TEXT, textEntered);
-                startChildActivityIntent.putExtra(cDion, "dion keren");
-
-                startActivity(startChildActivityIntent);
-            }
-        });
         mSortTopRated.setOnClickListener(new OnClickListener() {
 
             /**

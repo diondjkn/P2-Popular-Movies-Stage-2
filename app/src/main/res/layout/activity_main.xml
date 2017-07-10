@@ -20,15 +20,10 @@
         android:layout_height="wrap_content"/>
 
     <Button
-        android:id="@+id/b_do_something_cool"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"/>
-    <Button
         android:id="@+id/b_top_rated"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Top EEE Rated"/>
+        android:text="Top TTT Rated"/>
     <Button
         android:id="@+id/b_popular"
         android:layout_width="match_parent"
@@ -38,22 +33,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"></ScrollView>
 
-<ImageView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:id="@+id/imageView1"/>
-
 
     <GridView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/movies_gridview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:columnWidth="150dp"
+        android:id="@+id/gridview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:columnWidth="110dp"
         android:numColumns="auto_fit"
-        android:verticalSpacing="2dp"
-        android:horizontalSpacing="2dp"
+        android:verticalSpacing="10dp"
+        android:horizontalSpacing="10dp"
         android:stretchMode="columnWidth"
-        android:gravity="center"
-        />
+        android:gravity="center" />
+
 
 </LinearLayout>
