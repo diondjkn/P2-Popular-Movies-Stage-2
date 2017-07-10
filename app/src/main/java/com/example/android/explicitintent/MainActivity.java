@@ -33,6 +33,9 @@ import android.os.AsyncTask;
 import java.io.InputStream;
 import android.graphics.BitmapFactory;
 import android.util.Log;
+import android.view.ViewGroup;
+import com.squareup.picasso.Picasso;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
     private Button mDoSomethingCoolButton;
     private Button mSortTopRated;
     private Button mSortPopular;
+
+    GridView gridview;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +64,14 @@ public class MainActivity extends AppCompatActivity {
 
         //}
 
+
+
+        //Picasso.with(this).load("http://i.imgur.com/DvpvklR.png").into(imageView1);
+
+
+        //gridview=(GridView) findViewById(R.id.movies_gridview);
+        //gridAdaptor i = new gridAdaptor(getActivity());
+        //gridview.setAdapter(i);
 
         GridView m_gridview = (GridView) findViewById(R.id.movies_gridview);
         //m_gridview.setAdapter(new ImageAdapter(this));
@@ -153,7 +167,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
 
@@ -178,5 +191,5 @@ public class MainActivity extends AppCompatActivity {
             bmImage.setImageBitmap(result);
         }
     }
-
 }
+
