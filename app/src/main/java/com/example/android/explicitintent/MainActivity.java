@@ -27,6 +27,12 @@ import android.widget.GridView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
+import java.io.InputStream;
+import android.graphics.BitmapFactory;
+import android.util.Log;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,10 +48,21 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        GridView gridview = (GridView) findViewById(R.id.gridview);
-        gridview.setAdapter(new ImageAdapter(this));
+        // show The Image in a ImageView
+        new DownloadImageTask((ImageView) findViewById(R.id.imageView1))
+                .execute("https://image.tmdb.org/t/p/w320/5qcUGqWoWhEsoQwNUrtf3y3fcWn.jpg");
 
-        gridview.setOnItemClickListener(new OnItemClickListener() {
+        // public void onClick(View v) {
+        //     startActivity(new Intent(this, IndexActivity.class));
+        //     finish();
+
+        //}
+
+
+        GridView m_gridview = (GridView) findViewById(R.id.movies_gridview);
+        //m_gridview.setAdapter(new ImageAdapter(this));
+
+        m_gridview.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
                 Toast.makeText(MainActivity.this, "" + position,
@@ -135,5 +152,31 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-}
 
+
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
+    }
+
+}

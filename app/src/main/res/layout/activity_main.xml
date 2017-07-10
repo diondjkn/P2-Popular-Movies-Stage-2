@@ -28,7 +28,7 @@
         android:id="@+id/b_top_rated"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Top DDD Rated"/>
+        android:text="Top EEE Rated"/>
     <Button
         android:id="@+id/b_popular"
         android:layout_width="match_parent"
@@ -38,9 +38,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"></ScrollView>
 
+<ImageView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/imageView1"/>
+
 
     <GridView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/gridview"
+        android:id="@+id/movies_gridview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:columnWidth="150dp"
