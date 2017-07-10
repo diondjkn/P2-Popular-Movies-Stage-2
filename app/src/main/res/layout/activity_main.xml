@@ -14,21 +14,17 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity">
 
-    <EditText
-        android:id="@+id/et_text_entry"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
     <Button
         android:id="@+id/b_top_rated"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Top TTT Rated"/>
+        android:text="Top Rated"/>
     <Button
         android:id="@+id/b_popular"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Popular"/>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"></ScrollView>
@@ -42,7 +38,6 @@
         android:numColumns="auto_fit"
         android:verticalSpacing="10dp"
         android:horizontalSpacing="10dp"
-        android:stretchMode="columnWidth"
         android:gravity="center" />
 
 

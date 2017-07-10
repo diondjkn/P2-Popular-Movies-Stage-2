@@ -63,116 +63,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // show The Image in a ImageView
-        //new DownloadImageTask((ImageView) findViewById(R.id.imageView1))
-        //        .execute("https://image.tmdb.org/t/p/w320/5qcUGqWoWhEsoQwNUrtf3y3fcWn.jpg");
-
-        // public void onClick(View v) {
-        //     startActivity(new Intent(this, IndexActivity.class));
-        //     finish();
-
-        //}
-
-
-
-        //Picasso.with(this).load("http://i.imgur.com/DvpvklR.png").into(imageView1);
-
-
-        //gridview=(GridView) findViewById(R.id.movies_gridview);
-        //gridAdaptor i = new gridAdaptor(getActivity());
-        //gridview.setAdapter(i);
-
-        //GridView m_gridview = (GridView) findViewById(R.id.movies_gridview);
-        //m_gridview.setAdapter(new ImageAdapter(this));
-
-        //m_gridview.setOnItemClickListener(new OnItemClickListener() {
-        //    public void onItemClick(AdapterView<?> parent, View v,
-         //                           int position, long id) {
-         //       Toast.makeText(MainActivity.this, "" + position,
-         //               Toast.LENGTH_SHORT).show();
-         //   }
-        //});
-
-        /*
-         * Using findViewById, we get a reference to our Button from xml. This allows us to
-         * do things like set the onClickListener which determines what happens when the button
-         * is clicked.
-         */
-        mNameEntry = (EditText) findViewById(R.id.et_text_entry);
         mSortTopRated = (Button) findViewById(R.id.b_top_rated);
         mSortPopular = (Button) findViewById(R.id.b_popular);
 
         /* Setting an OnClickListener allows us to do something when this button is clicked. */
 
-        mSortTopRated.setOnClickListener(new OnClickListener() {
 
-            /**
-             *  Catatan tombol Top Rated
-             * */
-
-            @Override
-            public void onClick(View v) {
-                // TODO OK (1) Retrieve the text from the EditText and store it in a variable
-                String textEntered = mNameEntry.getText().toString();
-
-                Context context = MainActivity.this;
-
-                Class destinationActivity = ChildActivity.class;
-
-                Intent startChildActivityIntent = new Intent(context, destinationActivity);
-
-                startChildActivityIntent.putExtra(Intent.EXTRA_TEXT, textEntered);
-
-                startActivity(startChildActivityIntent);
-            }
-        });
-        mSortPopular.setOnClickListener(new OnClickListener() {
-
-            /**
-             *  Catatan tombol Popular
-             * */
-
-            @Override
-            public void onClick(View v) {
-                // TODO OK (1) Retrieve the text from the EditText and store it in a variable
-                String textEntered = mNameEntry.getText().toString();
-
-                Context context = MainActivity.this;
-
-                Class destinationActivity = ChildActivity.class;
-
-                Intent startChildActivityIntent = new Intent(context, destinationActivity);
-
-                startChildActivityIntent.putExtra(Intent.EXTRA_TEXT, textEntered);
-
-                startActivity(startChildActivityIntent);
-            }
-        });
     }
 
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
-
-        public DownloadImageTask(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
-        }
-    }
 }
 

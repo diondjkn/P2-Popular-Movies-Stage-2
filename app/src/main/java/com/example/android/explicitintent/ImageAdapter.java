@@ -18,12 +18,12 @@ public class ImageAdapter extends BaseAdapter {
     int imageTotal = 7;
     public static String[] mThumbIds = {
             "https://image.tmdb.org/t/p/w320/tWqifoYuwLETmmasnGHO7xBjEtt.jpg",
-            "https://image.tmdb.org/t/p/w320/5qcUGqWoWhEsoQwNUrtf3y3fcWn.jpg",
             "https://image.tmdb.org/t/p/w320/imekS7f1OuHyUP2LAiTEM0zBzUz.jpg",
             "https://image.tmdb.org/t/p/w320/5qcUGqWoWhEsoQwNUrtf3y3fcWn.jpg",
-            "https://image.tmdb.org/t/p/w320/5qcUGqWoWhEsoQwNUrtf3y3fcWn.jpg",
-            "https://image.tmdb.org/t/p/w320/5qcUGqWoWhEsoQwNUrtf3y3fcWn.jpg",
-            "https://image.tmdb.org/t/p/w320/5qcUGqWoWhEsoQwNUrtf3y3fcWn.jpg",
+            "https://image.tmdb.org/t/p/w320/c24sv2weTHPsmDa7jEMN0m2P3RT.jpg",
+            "https://image.tmdb.org/t/p/w320/9EXnebqbb7dOhONLPV9Tg2oh2KD.jpg",
+            "https://image.tmdb.org/t/p/w320/qL0w9X1dVT3dnkZg3SrYtPFUHMs.jpg",
+            "https://image.tmdb.org/t/p/w320/f8Ng1Sgb3VLiSwAvrfKeQPzvlfr.jpg",
 
     };
 
