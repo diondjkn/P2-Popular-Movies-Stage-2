@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // TODO OK (1) Retrieve the text from the EditText and store it in a variable
                 String textEntered = mNameEntry.getText().toString();
+                String cDion = " ";
 
                 Context context = MainActivity.this;
 
@@ -84,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent startChildActivityIntent = new Intent(context, destinationActivity);
 
                 startChildActivityIntent.putExtra(Intent.EXTRA_TEXT, textEntered);
+                startChildActivityIntent.putExtra(cDion, "dion keren");
 
                 startActivity(startChildActivityIntent);
             }

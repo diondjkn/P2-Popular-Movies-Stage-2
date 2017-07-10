@@ -33,6 +33,7 @@ public class ChildActivity extends AppCompatActivity {
         /* Typical usage of findViewById... */
         mDisplayText = (TextView) findViewById(R.id.tv_display);
 
+
         // TODO OK (3) Use the getIntent method to store the Intent that started this Activity in a variable
         Intent intentThatStartedThisActivity = getIntent();
 
@@ -41,6 +42,7 @@ public class ChildActivity extends AppCompatActivity {
 
             // TODO OK (5) If the Intent contains the correct extra, retrieve the text
             String textEntered = intentThatStartedThisActivity.getStringExtra(Intent.EXTRA_TEXT);
+
 
             // TODO (6) If the Intent contains the correct extra, use it to set the TextView text
             mDisplayText.setText(textEntered);
