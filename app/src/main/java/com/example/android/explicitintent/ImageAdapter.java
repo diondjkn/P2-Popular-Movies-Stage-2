@@ -4,8 +4,6 @@ package com.example.android.explicitintent;
  * Created by dionlusi on 7/9/17.
  */
 
-import com.squareup.picasso.Picasso;
-
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,31 +11,27 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import com.example.android.explicitintent.network.model.Result;
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
+
 public class ImageAdapter extends BaseAdapter {
     private Context mContext;
-    int imageTotal = 7;
-    public static String[] mThumbIds = {
-            "https://image.tmdb.org/t/p/w320/tWqifoYuwLETmmasnGHO7xBjEtt.jpg",
-            "https://image.tmdb.org/t/p/w320/imekS7f1OuHyUP2LAiTEM0zBzUz.jpg",
-            "https://image.tmdb.org/t/p/w320/5qcUGqWoWhEsoQwNUrtf3y3fcWn.jpg",
-            "https://image.tmdb.org/t/p/w320/c24sv2weTHPsmDa7jEMN0m2P3RT.jpg",
-            "https://image.tmdb.org/t/p/w320/9EXnebqbb7dOhONLPV9Tg2oh2KD.jpg",
-            "https://image.tmdb.org/t/p/w320/qL0w9X1dVT3dnkZg3SrYtPFUHMs.jpg",
-            "https://image.tmdb.org/t/p/w320/f8Ng1Sgb3VLiSwAvrfKeQPzvlfr.jpg",
+    private List<Result> mThumbIds;
 
-    };
-
-    public ImageAdapter(Context c) {
+    public ImageAdapter(Context c,List<Result> mThumbIds) {
         mContext = c;
+        this.mThumbIds = mThumbIds;
     }
 
     public int getCount() {
-        return imageTotal;
+        return mThumbIds.size();
     }
 
     @Override
-    public String getItem(int position) {
-        return mThumbIds[position];
+    public Result getItem(int position) {
+        return mThumbIds.get(position);
     }
 
     public long getItemId(int position) {
@@ -49,12 +43,12 @@ public class ImageAdapter extends BaseAdapter {
         if (convertView == null) {
             imageView = new ImageView(mContext);
             imageView.setLayoutParams(new GridView.LayoutParams(480, 480));
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setScaleType(ImageView.ScaleType.FIT_END);
             imageView.setPadding(8, 8, 8, 8);
         } else {
             imageView = (ImageView) convertView;
         }
-        String url = getItem(position);
+        String url = "https://image.tmdb.org/t/p/w320"+getItem(position).getPosterPath();
         Picasso.with(mContext)
                 .load(url)
                 .placeholder(R.drawable.loader)

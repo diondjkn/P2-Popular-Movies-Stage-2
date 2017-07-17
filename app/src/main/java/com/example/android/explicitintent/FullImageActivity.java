@@ -1,61 +1,65 @@
 package com.example.android.explicitintent;
 
-import android.support.v7.app.AppCompatActivity;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.ImageView;
+import android.widget.TextView;
 
-import java.io.InputStream;
+import com.example.android.explicitintent.network.model.Result;
+import com.google.gson.GsonBuilder;
+import com.squareup.picasso.Picasso;
 
 
 public class FullImageActivity extends Activity {
 
-    ProgressDialog pDialog;
     ImageView img;
     Bitmap bitmap;
+    private TextView cTitle;
+    private TextView cReleaseDate;
+    private ImageView iPoster;
+    private TextView cOverview;
+    private TextView cAverage;
+
+
     @Override
-
-
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fullimageview);
 
         Intent i = getIntent();
-        int position = i.getExtras().getInt("id");
-        ImageAdapter imageAdapter = new ImageAdapter(this);
+        String gson = i.getStringExtra("result");
+        Result result = new GsonBuilder().create().fromJson(gson, Result.class);
 
-        img = (ImageView) findViewById(R.id.image);
-        String url = imageAdapter.getItem(position);
+//Movie details layout contains title, release date, movie poster, vote average, and plot synopsis.
 
-        new DownloadImage().execute(url);
+        //result.getTitle();
+        //result.getReleaseDate();
+        //result.getPosterPath();
+        //result.getOverview();
+        //result.getVoteAverage();
+
+        cTitle = (TextView) findViewById(R.id.title);
+        cTitle.setText(result.getTitle());
+
+        cReleaseDate = (TextView) findViewById(R.id.release_date);
+        cReleaseDate.setText("Release Date: "+result.getReleaseDate());
+
+        cOverview = (TextView) findViewById(R.id.overview);
+        cOverview.setText("Overview: \n "+result.getOverview());
+
+        cAverage = (TextView) findViewById(R.id.vote_average);
+        cAverage.setText("Vote Average: "+result.getVoteAverage().toString());
+
+        iPoster = (ImageView) findViewById(R.id.poster);
+        Picasso.with(this).load("https://image.tmdb.org/t/p/w320"+result.getPosterPath()).into(iPoster);
+
+
     }
-    private class DownloadImage extends AsyncTask<String, Void, Bitmap> {
-
-        @Override
-        protected Bitmap doInBackground(String... URL) {
-            String imageURL = URL[0];
-            Bitmap bitmap = null;
-            try {
-                InputStream input = new java.net.URL(imageURL).openStream();
-                bitmap = BitmapFactory.decodeStream(input);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return bitmap;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            img.setImageBitmap(result);
-        }
-    }
-
 }
-//public class FullImageActivity extends AppCompatActivity {
+
+
+
 
 
