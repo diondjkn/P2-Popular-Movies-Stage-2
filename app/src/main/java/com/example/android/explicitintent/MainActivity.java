@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void callVolley(String option) {
 
-        String url = "https://api.themoviedb.org/3/movie/"+option+"?api_key=1831fea099b5dc948f71ac983802ac79";
+        String url = "https://api.themoviedb.org/3/movie/"+option+"?api_key=";
         GsonRequest<Movie> gsonRequest =
                 new GsonRequest<>(url, Movie.class, null,
                         new Response.Listener<Movie>() {
