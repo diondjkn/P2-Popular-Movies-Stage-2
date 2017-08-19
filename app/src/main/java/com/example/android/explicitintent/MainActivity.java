@@ -16,59 +16,50 @@
 package com.example.android.explicitintent;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.GridView;
 
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
+import com.example.android.explicitintent.favorite.GetResultList;
 import com.example.android.explicitintent.network.base.VolleySingleton;
 import com.example.android.explicitintent.network.model.Movie;
 import com.example.android.explicitintent.network.model.Result;
-import com.google.gson.GsonBuilder;
+import com.facebook.stetho.Stetho;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.android.explicitintent.favorite.FavoriteContract.FavoriteMovieEntry.CONTENT_URI;
+import static com.example.android.explicitintent.favorite.FavoriteContract.FavoriteMovieEntry.MOVIE_PROJECTION;
 
-public class MainActivity extends AppCompatActivity {
 
-    /* Fields that will store our EditText and Button */
-    private EditText mNameEntry;
-    private Button mDoSomethingCoolButton;
-    private Button mSortTopRated;
-    private Button mSortPopular;
+public class MainActivity extends AppCompatActivity
+        implements Response.Listener<GetResultList> {
+
+
 
     private List<Result> results = new ArrayList<>();
     private GridView gridview;
 
-    public static String[] arrayUrl2 = {
-          "https://image.tmdb.org/t/p/w320/tWqifoYuwLETmmasnGHO7xBjEtt.jpg",
-           "https://image.tmdb.org/t/p/w320/imekS7f1OuHyUP2LAiTEM0zBzUz.jpg",
-            "https://image.tmdb.org/t/p/w320/5qcUGqWoWhEsoQwNUrtf3y3fcWn.jpg",
-            "https://image.tmdb.org/t/p/w320/c24sv2weTHPsmDa7jEMN0m2P3RT.jpg",
-            "https://image.tmdb.org/t/p/w320/9EXnebqbb7dOhONLPV9Tg2oh2KD.jpg",
-            "https://image.tmdb.org/t/p/w320/qL0w9X1dVT3dnkZg3SrYtPFUHMs.jpg",
-            "https://image.tmdb.org/t/p/w320/f8Ng1Sgb3VLiSwAvrfKeQPzvlfr.jpg",
 
-    };
 
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Stetho.initializeWithDefaults(this);
         setContentView(R.layout.activity_main);
 
-        //arrayUrl2 = (TextView) findViewById(R.id.text_view);
-        // Arrays.asList(arrayUrl2)
 
         gridview = (GridView) findViewById(R.id.gridview);
         gridview.setAdapter(new ImageAdapter(this, results));
@@ -76,22 +67,19 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 Intent i = new Intent(MainActivity.this, FullImageActivity.class);
                 Result result = results.get(position);
-                i.putExtra("result", new GsonBuilder().create().toJson(result));
+                i.putExtra(FullImageActivity.KEY_MOVIE_DATA, result);
                 startActivity(i);
             }
         });
 
         callVolley("popular");
 
-        /* Setting an OnClickListener allows us to do something when this button is clicked. */
-
 
     }
 
-
     private void callVolley(String option) {
 
-        String url = "https://api.themoviedb.org/3/movie/"+option+"?api_key=";
+        String url = "https://api.themoviedb.org/3/movie/"+option+"?api_key=1831fea099b5dc948f71ac983802ac79";
         GsonRequest<Movie> gsonRequest =
                 new GsonRequest<>(url, Movie.class, null,
                         new Response.Listener<Movie>() {
@@ -108,6 +96,12 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
         VolleySingleton.getInstance(this).addToRequestQueue(gsonRequest, MainActivity.class);
+    }
+
+    @Override
+    public void onResponse(@NonNull GetResultList currentResponse) {
+        results = currentResponse.getResults();
+        gridview.setAdapter(new ImageAdapter(MainActivity.this, results));
     }
 
     @Override
@@ -133,8 +127,45 @@ public class MainActivity extends AppCompatActivity {
         else if (id==R.id.top_rated){
             callVolley("top_rated");
             return true;
+        }else if (id==R.id.favorite){
+            loadFavoriteMoviesFromDb();
+            return true;
         };
 
         return super.onOptionsItemSelected(item);
     }
+
+
+    private void loadFavoriteMoviesFromDb() {
+        new Thread() {
+            @Override
+            public void run() {
+                final ArrayList<Result> movieArrayList = new ArrayList<>();
+                final Cursor query = getContentResolver().query(CONTENT_URI, MOVIE_PROJECTION, null, null, null);
+                if (query != null) {
+                    if (query.moveToFirst()) {
+                        do {
+                            movieArrayList.add(Result.fromCursor(query));
+                        } while (query.moveToNext());
+                    }
+                }
+
+                if (!MainActivity.this.isFinishing() && !MainActivity.this.isDestroyed()) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            GetResultList response = new GetResultList();
+                            response.setPage(1);
+                            response.setTotal_pages(1);
+                            response.setTotal_results(1);
+                            response.setResults(movieArrayList);
+
+                            onResponse(response);
+                        }
+                    });
+                }
+            }
+        }.start();
+    }
+
 }
