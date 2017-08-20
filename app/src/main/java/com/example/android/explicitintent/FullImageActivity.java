@@ -1,7 +1,6 @@
 package com.example.android.explicitintent;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -9,15 +8,13 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.content.res.ResourcesCompat;
-import android.support.v4.view.NestedScrollingChild;
-import android.support.v4.view.NestedScrollingParent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,13 +22,14 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
+import com.example.android.explicitintent.adapter.TrailerAdapter;
 import com.example.android.explicitintent.network.base.VolleySingleton;
 import com.example.android.explicitintent.network.model.Result;
+import com.example.android.explicitintent.network.model.Trailer;
 import com.example.android.explicitintent.network.model.TrailerResult;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import static com.example.android.explicitintent.favorite.FavoriteContract.FavoriteMovieEntry.COLUMN_MOVIE_ID;
@@ -39,7 +37,7 @@ import static com.example.android.explicitintent.favorite.FavoriteContract.Favor
 import static com.example.android.explicitintent.favorite.FavoriteContract.FavoriteMovieEntry.MOVIE_PROJECTION;
 import static com.example.android.explicitintent.util.utility.getMovieValues;
 
-public class FullImageActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Result> , NestedScrollingParent, NestedScrollingChild {
+public class FullImageActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Result> {
 
     ImageView img;
     Bitmap bitmap;
@@ -55,6 +53,7 @@ public class FullImageActivity extends AppCompatActivity implements LoaderManage
     private static Toast toast;
     //private ArrayList<TrailerResult> TrailerList;
     private List<TrailerResult> TrailerList = new ArrayList<>();
+    //private List<Trailer> TrailerList = new ArrayList<>();
 
     //private ArrayList<ReviewsResult> ReviewsList;
 
@@ -100,116 +99,51 @@ public class FullImageActivity extends AppCompatActivity implements LoaderManage
 
     }
 
-    @Override
-    public void setNestedScrollingEnabled(boolean enabled) {
 
-    }
-
-    @Override
-    public boolean isNestedScrollingEnabled() {
-        return false;
-    }
-
-    @Override
-    public boolean startNestedScroll(int axes) {
-        return false;
-    }
-
-    @Override
-    public void stopNestedScroll() {
-
-    }
-
-    @Override
-    public boolean hasNestedScrollingParent() {
-        return false;
-    }
-
-    @Override
-    public boolean dispatchNestedScroll(int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int[] offsetInWindow) {
-        return false;
-    }
-
-    @Override
-    public boolean dispatchNestedPreScroll(int dx, int dy, int[] consumed, int[] offsetInWindow) {
-        return false;
-    }
-
-    @Override
-    public boolean dispatchNestedFling(float velocityX, float velocityY, boolean consumed) {
-        return false;
-    }
-
-    @Override
-    public boolean dispatchNestedPreFling(float velocityX, float velocityY) {
-        return false;
-    }
-
-    @Override
-    public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
-        return false;
-    }
-
-    @Override
-    public void onNestedScrollAccepted(View child, View target, int nestedScrollAxes) {
-
-    }
-
-    @Override
-    public void onStopNestedScroll(View target) {
-
-    }
-
-    @Override
-    public void onNestedScroll(View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
-
-    }
-
-    @Override
-    public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
-
-    }
-
-    @Override
-    public boolean onNestedFling(View target, float velocityX, float velocityY, boolean consumed) {
-        return false;
-    }
-
-    @Override
-    public boolean onNestedPreFling(View target, float velocityX, float velocityY) {
-        return false;
-    }
-
-    @Override
-    public int getNestedScrollAxes() {
-        return 0;
-    }
-
-    private class StableArrayAdapter extends ArrayAdapter<String> {
-
-        HashMap<String, Integer> mIdMap = new HashMap<String, Integer>();
-
-        public StableArrayAdapter(Context context, int textViewResourceId,
-                                  List<String> objects) {
-            super(context, textViewResourceId, objects);
-            for (int i = 0; i < objects.size(); ++i) {
-                mIdMap.put(objects.get(i), i);
-            }
-        }
-
-        @Override
-        public long getItemId(int position) {
-            String item = getItem(position);
-            return mIdMap.get(item);
-        }
-
-        @Override
-        public boolean hasStableIds() {
-            return true;
-        }
-
-
-    }
+//    private class StableArrayAdapter extends BaseAdapter {
+//
+//        HashMap<String, Integer> mIdMap = new HashMap<String, Integer>();
+//        public StableArrayAdapter(Context context, int textViewResourceId,
+//                                  List<String> objects) {
+//            super(context, textViewResourceId, objects);
+//            for (int i = 0; i < objects.size(); ++i) {
+//                mIdMap.put(objects.get(i), i);
+//            }
+//        }
+//
+//        @Override
+//        public int getCount() {
+//            return 0;
+//        }
+//
+//        @Override
+//        public Object getItem(int i) {
+//            return null;
+//        }
+//
+//        @Override
+//        public long getItemId(int position) {
+//            String item = getItem(position);
+//            return mIdMap.get(item);
+//        }
+//
+//        @Override
+//        public boolean hasStableIds() {
+//            return true;
+//        }
+//
+//        @Override
+//        public View getView(int i, View view, ViewGroup viewGroup) {
+//            return null;
+//        }
+//
+//        @Override
+//        public CharSequence[] getAutofillOptions() {
+//            return new CharSequence[0];
+//        }
+//
+//
+//    }
 
 
     @Override
@@ -335,73 +269,27 @@ public class FullImageActivity extends AppCompatActivity implements LoaderManage
 
 
 
+
     private void callVolleyTrailer(String option) {
 
         String url = "https://api.themoviedb.org/3/movie/"+option+"/videos?api_key=1831fea099b5dc948f71ac983802ac79";
-        GsonRequest<Object> gsonRequest =
-                new GsonRequest<>(url, Object.class, null,
-                        new Response.Listener<Object>() {
+        GsonRequest<Trailer> gsonRequest =
+                new GsonRequest<>(url, Trailer.class, null,
+                        new Response.Listener<Trailer>() {
                             @Override
-                            public void onResponse(Object trailer) {
+                            public void onResponse(Trailer trailer) {
                                 // TODO do next things after response success
                                 Log.d("","");
-//                                TrailerList =  trailer.getTrailerResults() ;
-//
-//
-//
-//                                final ListView listview = (ListView) findViewById(R.id.trailer_list);
-//                                listview.setOnTouchListener(new View.OnTouchListener() {
-//                                    @Override
-//                                    public boolean onTouch(View view, MotionEvent motionEvent) {
-//                                        view.getParent().requestDisallowInterceptTouchEvent(true);
-//                                        return false;
-//                                    }
-//                                });
-//
-//                                String[] values1 = new String[] { "Android", "iPhone", "WindowsMobile",
-//                                        "Blackberry", "WebOS", "Ubuntu", "Android", "iPhone", "WindowsMobile",
-//                                        "Blackberry", "WebOS", "Ubuntu", "Android", "iPhone", "WindowsMobile",
-//                                        "Blackberry", "WebOS", "Ubuntu" };
-//
-//                                String[] values = TrailerList.toArray(new String[TrailerList.size()]);
-//
-//                                final ArrayList<String> list = new ArrayList<String>();
-//                                for (int i = 0; i < values.length; i++) {
-//                                    list.add(values[i]);
-//                                }
-//
-//                                 StableArrayAdapter adapter
-//                                        = new StableArrayAdapter(FullImageActivity.this ,
-//                                         android.R.layout.simple_list_item_1
-//                                         , list);
-//
-//
-//                                listview.setAdapter(adapter);
-//
-//                                listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//
-//                                    @Override
-//                                    public void onItemClick(AdapterView<?> parent, final View view,
-//                                                            int position, long id) {
-//                /*final String item = (String) parent.getItemAtPosition(position);
-//                view.animate().setDuration(2000).alpha(0)
-//                        .withEndAction(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                list.remove(item);
-//                                adapter.notifyDataSetChanged();
-//                                view.setAlpha(1);
-//                            }
-//                        });*/
-//                                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=cxLG2wtE7TM")));
-//
-//                                    }
-//
-//                                });
-//
-//                                ViewCompat.setNestedScrollingEnabled(listview,false);
-//
-//                                //gridview.setAdapter(new ImageAdapter(MainActivity.this, results));
+                                TrailerList = trailer.getTrailerResults() ;
+
+                                //
+                                //
+                                // Trailer[] values = TrailerList.toArray(new Trailer[TrailerList.size()]);
+
+                                final RecyclerView listview = (RecyclerView) findViewById(R.id.trailer_list);
+                                listview.setAdapter(new TrailerAdapter(TrailerList));
+                                listview.setLayoutManager(new LinearLayoutManager(FullImageActivity.this));
+
                             }
                         }, new Response.ErrorListener() {
                     @Override

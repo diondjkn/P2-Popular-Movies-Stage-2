@@ -1,13 +1,17 @@
 package com.example.android.explicitintent.network.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 
 /**
  * Created by dionlusi on 8/13/17.
  */
-public class TrailerResult //implements Parcelable
+public class TrailerResult implements Serializable, Parcelable
 {
 
     @SerializedName("id")
@@ -34,32 +38,32 @@ public class TrailerResult //implements Parcelable
     @SerializedName("type")
     @Expose
     private String type;
+    public final static Parcelable.Creator<TrailerResult> CREATOR = new Creator<TrailerResult>() {
 
-//    public final static Creator<TrailerResult> CREATOR = new Creator<TrailerResult>() {
-//
-//
-//        @SuppressWarnings({
-//                "unchecked"
-//        })
-//        public TrailerResult createFromParcel(Parcel in) {
-//            TrailerResult instance = new TrailerResult();
-//            instance.id = ((String) in.readValue((String.class.getClassLoader())));
-//            instance.iso6391 = ((String) in.readValue((String.class.getClassLoader())));
-//            instance.iso31661 = ((String) in.readValue((String.class.getClassLoader())));
-//            instance.key = ((String) in.readValue((String.class.getClassLoader())));
-//            instance.name = ((String) in.readValue((String.class.getClassLoader())));
-//            instance.site = ((String) in.readValue((String.class.getClassLoader())));
-//            instance.size = ((Integer) in.readValue((Integer.class.getClassLoader())));
-//            instance.type = ((String) in.readValue((String.class.getClassLoader())));
-//            return instance;
-//        }
-//
-//        public TrailerResult[] newArray(int size) {
-//            return (new TrailerResult[size]);
-//        }
-//
-//    }
-//            ;
+
+        @SuppressWarnings({
+                "unchecked"
+        })
+        public TrailerResult createFromParcel(Parcel in) {
+            TrailerResult instance = new TrailerResult();
+            instance.id = ((String) in.readValue((String.class.getClassLoader())));
+            instance.iso6391 = ((String) in.readValue((String.class.getClassLoader())));
+            instance.iso31661 = ((String) in.readValue((String.class.getClassLoader())));
+            instance.key = ((String) in.readValue((String.class.getClassLoader())));
+            instance.name = ((String) in.readValue((String.class.getClassLoader())));
+            instance.site = ((String) in.readValue((String.class.getClassLoader())));
+            instance.size = ((Integer) in.readValue((Integer.class.getClassLoader())));
+            instance.type = ((String) in.readValue((String.class.getClassLoader())));
+            return instance;
+        }
+
+        public TrailerResult[] newArray(int size) {
+            return (new TrailerResult[size]);
+        }
+
+    }
+            ;
+    private final static long serialVersionUID = 7146987766718262333L;
 
     public String getId() {
         return id;
@@ -125,20 +129,19 @@ public class TrailerResult //implements Parcelable
         this.type = type;
     }
 
-//    public void writeToParcel(Parcel dest, int flags) {
-//        dest.writeValue(id);
-//        dest.writeValue(iso6391);
-//        dest.writeValue(iso31661);
-//        dest.writeValue(key);
-//        dest.writeValue(name);
-//        dest.writeValue(site);
-//        dest.writeValue(size);
-//        dest.writeValue(type);
-//    }
-//
-//    public int describeContents() {
-//        return 0;
-//    }
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(id);
+        dest.writeValue(iso6391);
+        dest.writeValue(iso31661);
+        dest.writeValue(key);
+        dest.writeValue(name);
+        dest.writeValue(site);
+        dest.writeValue(size);
+        dest.writeValue(type);
+    }
 
+    public int describeContents() {
+        return 0;
+    }
 
 }
