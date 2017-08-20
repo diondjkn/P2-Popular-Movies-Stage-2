@@ -2,10 +2,8 @@ package com.example.android.explicitintent;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
@@ -13,18 +11,14 @@ import android.support.v4.content.Loader;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.NestedScrollingChild;
 import android.support.v4.view.NestedScrollingParent;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +27,6 @@ import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
 import com.example.android.explicitintent.network.base.VolleySingleton;
 import com.example.android.explicitintent.network.model.Result;
-import com.example.android.explicitintent.network.model.Trailer;
 import com.example.android.explicitintent.network.model.TrailerResult;
 import com.squareup.picasso.Picasso;
 
@@ -345,69 +338,70 @@ public class FullImageActivity extends AppCompatActivity implements LoaderManage
     private void callVolleyTrailer(String option) {
 
         String url = "https://api.themoviedb.org/3/movie/"+option+"/videos?api_key=1831fea099b5dc948f71ac983802ac79";
-        GsonRequest<Trailer> gsonRequest =
-                new GsonRequest<>(url, Trailer.class, null,
-                        new Response.Listener<Trailer>() {
+        GsonRequest<Object> gsonRequest =
+                new GsonRequest<>(url, Object.class, null,
+                        new Response.Listener<Object>() {
                             @Override
-                            public void onResponse(Trailer trailer) {
+                            public void onResponse(Object trailer) {
                                 // TODO do next things after response success
-                                TrailerList =  trailer.getTrailerResults() ;
-
-
-
-                                final ListView listview = (ListView) findViewById(R.id.trailer_list);
-                                listview.setOnTouchListener(new View.OnTouchListener() {
-                                    @Override
-                                    public boolean onTouch(View view, MotionEvent motionEvent) {
-                                        view.getParent().requestDisallowInterceptTouchEvent(true);
-                                        return false;
-                                    }
-                                });
-
-                                String[] values1 = new String[] { "Android", "iPhone", "WindowsMobile",
-                                        "Blackberry", "WebOS", "Ubuntu", "Android", "iPhone", "WindowsMobile",
-                                        "Blackberry", "WebOS", "Ubuntu", "Android", "iPhone", "WindowsMobile",
-                                        "Blackberry", "WebOS", "Ubuntu" };
-
-                                String[] values = TrailerList.toArray(new String[TrailerList.size()]);
-
-                                final ArrayList<String> list = new ArrayList<String>();
-                                for (int i = 0; i < values.length; i++) {
-                                    list.add(values[i]);
-                                }
-
-                                 StableArrayAdapter adapter
-                                        = new StableArrayAdapter(FullImageActivity.this ,
-                                         android.R.layout.simple_list_item_1
-                                         , list);
-
-
-                                listview.setAdapter(adapter);
-
-                                listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                                    @Override
-                                    public void onItemClick(AdapterView<?> parent, final View view,
-                                                            int position, long id) {
-                /*final String item = (String) parent.getItemAtPosition(position);
-                view.animate().setDuration(2000).alpha(0)
-                        .withEndAction(new Runnable() {
-                            @Override
-                            public void run() {
-                                list.remove(item);
-                                adapter.notifyDataSetChanged();
-                                view.setAlpha(1);
-                            }
-                        });*/
-                                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=cxLG2wtE7TM")));
-
-                                    }
-
-                                });
-
-                                ViewCompat.setNestedScrollingEnabled(listview,false);
-
-                                //gridview.setAdapter(new ImageAdapter(MainActivity.this, results));
+                                Log.d("","");
+//                                TrailerList =  trailer.getTrailerResults() ;
+//
+//
+//
+//                                final ListView listview = (ListView) findViewById(R.id.trailer_list);
+//                                listview.setOnTouchListener(new View.OnTouchListener() {
+//                                    @Override
+//                                    public boolean onTouch(View view, MotionEvent motionEvent) {
+//                                        view.getParent().requestDisallowInterceptTouchEvent(true);
+//                                        return false;
+//                                    }
+//                                });
+//
+//                                String[] values1 = new String[] { "Android", "iPhone", "WindowsMobile",
+//                                        "Blackberry", "WebOS", "Ubuntu", "Android", "iPhone", "WindowsMobile",
+//                                        "Blackberry", "WebOS", "Ubuntu", "Android", "iPhone", "WindowsMobile",
+//                                        "Blackberry", "WebOS", "Ubuntu" };
+//
+//                                String[] values = TrailerList.toArray(new String[TrailerList.size()]);
+//
+//                                final ArrayList<String> list = new ArrayList<String>();
+//                                for (int i = 0; i < values.length; i++) {
+//                                    list.add(values[i]);
+//                                }
+//
+//                                 StableArrayAdapter adapter
+//                                        = new StableArrayAdapter(FullImageActivity.this ,
+//                                         android.R.layout.simple_list_item_1
+//                                         , list);
+//
+//
+//                                listview.setAdapter(adapter);
+//
+//                                listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//
+//                                    @Override
+//                                    public void onItemClick(AdapterView<?> parent, final View view,
+//                                                            int position, long id) {
+//                /*final String item = (String) parent.getItemAtPosition(position);
+//                view.animate().setDuration(2000).alpha(0)
+//                        .withEndAction(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                list.remove(item);
+//                                adapter.notifyDataSetChanged();
+//                                view.setAlpha(1);
+//                            }
+//                        });*/
+//                                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=cxLG2wtE7TM")));
+//
+//                                    }
+//
+//                                });
+//
+//                                ViewCompat.setNestedScrollingEnabled(listview,false);
+//
+//                                //gridview.setAdapter(new ImageAdapter(MainActivity.this, results));
                             }
                         }, new Response.ErrorListener() {
                     @Override

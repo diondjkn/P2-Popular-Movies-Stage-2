@@ -11,7 +11,7 @@ import java.util.List;
 //-----------------------------------com.example.android.explicitintent.network.model.TrailerResult.java-----------------------------------
 //-----------------------------------com.example.android.explicitintent.network.model.Trailer.java-----------------------------------
 
-public class Trailer implements Parcelable
+public class Trailer //implements Parcelable
 {
 
     @SerializedName("id")
@@ -20,25 +20,26 @@ public class Trailer implements Parcelable
     @SerializedName("TrailerResults")
     @Expose
     private List<TrailerResult> TrailerResults = null;
-    public final static Parcelable.Creator<Trailer> CREATOR = new Creator<Trailer>() {
 
-
-        @SuppressWarnings({
-                "unchecked"
-        })
-        public Trailer createFromParcel(Parcel in) {
-            Trailer instance = new Trailer();
-            instance.id = ((Integer) in.readValue((Integer.class.getClassLoader())));
-            in.readList(instance.TrailerResults, (com.example.android.explicitintent.network.model.TrailerResult.class.getClassLoader()));
-            return instance;
-        }
-
-        public Trailer[] newArray(int size) {
-            return (new Trailer[size]);
-        }
-
-    }
-            ;
+//    public final static Parcelable.Creator<Trailer> CREATOR = new Creator<Trailer>() {
+//
+//
+//        @SuppressWarnings({
+//                "unchecked"
+//        })
+//        public Trailer createFromParcel(Parcel in) {
+//            Trailer instance = new Trailer();
+//            instance.id = ((Integer) in.readValue((Integer.class.getClassLoader())));
+//            in.readList(instance.TrailerResults, (com.example.android.explicitintent.network.model.TrailerResult.class.getClassLoader()));
+//            return instance;
+//        }
+//
+//        public Trailer[] newArray(int size) {
+//            return (new Trailer[size]);
+//        }
+//
+//    }
+//            ;
 
     public Integer getId() {
         return id;
@@ -56,13 +57,13 @@ public class Trailer implements Parcelable
         this.TrailerResults = TrailerResults;
     }
 
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeValue(id);
-        dest.writeList(TrailerResults);
-    }
-
-    public int describeContents() {
-        return 0;
-    }
+//    public void writeToParcel(Parcel dest, int flags) {
+//        dest.writeValue(id);
+//        dest.writeList(TrailerResults);
+//    }
+//
+//    public int describeContents() {
+//        return 0;
+//    }
 
 }
