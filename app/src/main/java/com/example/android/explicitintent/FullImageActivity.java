@@ -22,9 +22,12 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
+import com.example.android.explicitintent.adapter.ReviewsAdapter;
 import com.example.android.explicitintent.adapter.TrailerAdapter;
 import com.example.android.explicitintent.network.base.VolleySingleton;
 import com.example.android.explicitintent.network.model.Result;
+import com.example.android.explicitintent.network.model.Reviews;
+import com.example.android.explicitintent.network.model.ReviewsResult;
 import com.example.android.explicitintent.network.model.Trailer;
 import com.example.android.explicitintent.network.model.TrailerResult;
 import com.squareup.picasso.Picasso;
@@ -51,12 +54,8 @@ public class FullImageActivity extends AppCompatActivity implements LoaderManage
     public static final String KEY_MOVIE_DATA = "movie data";
     private static final int FAVORITE_MOVIE_LOADER_ID = 212;
     private static Toast toast;
-    //private ArrayList<TrailerResult> TrailerList;
     private List<TrailerResult> TrailerList = new ArrayList<>();
-    //private List<Trailer> TrailerList = new ArrayList<>();
-
-    //private ArrayList<ReviewsResult> ReviewsList;
-
+    private List<ReviewsResult> ReviewList = new ArrayList<>();
 
 
     @Override
@@ -67,18 +66,11 @@ public class FullImageActivity extends AppCompatActivity implements LoaderManage
         Result result = getMovie();
 
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar !=null) {
+        if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
 
         }
 
-//Movie details layout contains title, release date, movie poster, vote average, and plot synopsis.
-
-        //result.getTitle();
-        //result.getReleaseDate();
-        //result.getPosterPath();
-        //result.getOverview();
-        //result.getVoteAverage();
 
         cTitle = (TextView) findViewById(R.id.title);
         cTitle.setText(result.getTitle());
@@ -96,62 +88,18 @@ public class FullImageActivity extends AppCompatActivity implements LoaderManage
         Picasso.with(this).load("https://image.tmdb.org/t/p/w320" + result.getPosterPath()).into(iPoster);
 
         callVolleyTrailer(result.getId());
+        callVolleyReviews(result.getId());
 
     }
 
 
-//    private class StableArrayAdapter extends BaseAdapter {
-//
-//        HashMap<String, Integer> mIdMap = new HashMap<String, Integer>();
-//        public StableArrayAdapter(Context context, int textViewResourceId,
-//                                  List<String> objects) {
-//            super(context, textViewResourceId, objects);
-//            for (int i = 0; i < objects.size(); ++i) {
-//                mIdMap.put(objects.get(i), i);
-//            }
-//        }
-//
-//        @Override
-//        public int getCount() {
-//            return 0;
-//        }
-//
-//        @Override
-//        public Object getItem(int i) {
-//            return null;
-//        }
-//
-//        @Override
-//        public long getItemId(int position) {
-//            String item = getItem(position);
-//            return mIdMap.get(item);
-//        }
-//
-//        @Override
-//        public boolean hasStableIds() {
-//            return true;
-//        }
-//
-//        @Override
-//        public View getView(int i, View view, ViewGroup viewGroup) {
-//            return null;
-//        }
-//
-//        @Override
-//        public CharSequence[] getAutofillOptions() {
-//            return new CharSequence[0];
-//        }
-//
-//
-//    }
 
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home: {
-                // NavUtils.navigateUpFromSameTask(this);//this will messed up shared element transition
-                // please suggest me if you have solution
+
                 onBackPressed();
                 return true;
             }
@@ -183,8 +131,6 @@ public class FullImageActivity extends AppCompatActivity implements LoaderManage
     }
 
 
-
-
     private void toggleFavoriteIcon() {
         menuItemFavorite.setIcon(
                 ResourcesCompat.getDrawable(
@@ -210,8 +156,6 @@ public class FullImageActivity extends AppCompatActivity implements LoaderManage
         final ContentValues movieValues = getMovieValues(movieData);
         getContentResolver().insert(CONTENT_URI, movieValues);
     }
-
-
 
 
     @Override
@@ -243,7 +187,6 @@ public class FullImageActivity extends AppCompatActivity implements LoaderManage
     }
 
 
-
     @Override
     public void onLoaderReset(Loader<Result> loader) {
     }
@@ -268,23 +211,17 @@ public class FullImageActivity extends AppCompatActivity implements LoaderManage
     }
 
 
-
-
     private void callVolleyTrailer(String option) {
 
-        String url = "https://api.themoviedb.org/3/movie/"+option+"/videos?api_key=1831fea099b5dc948f71ac983802ac79";
+        String url = "https://api.themoviedb.org/3/movie/" + option + "/videos?api_key=";
         GsonRequest<Trailer> gsonRequest =
                 new GsonRequest<>(url, Trailer.class, null,
                         new Response.Listener<Trailer>() {
                             @Override
                             public void onResponse(Trailer trailer) {
                                 // TODO do next things after response success
-                                Log.d("","");
-                                TrailerList = trailer.getTrailerResults() ;
-
-                                //
-                                //
-                                // Trailer[] values = TrailerList.toArray(new Trailer[TrailerList.size()]);
+                                Log.d("", "");
+                                TrailerList = trailer.getTrailerResults();
 
                                 final RecyclerView listview = (RecyclerView) findViewById(R.id.trailer_list);
                                 listview.setAdapter(new TrailerAdapter(TrailerList));
@@ -295,19 +232,41 @@ public class FullImageActivity extends AppCompatActivity implements LoaderManage
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // TODO do next things after response error
-                        Log.d("","");
+                        Log.d("", "");
                     }
                 });
         VolleySingleton.getInstance(this).addToRequestQueue(gsonRequest, FullImageActivity.class);
     }
 
 
+    private void callVolleyReviews(String option) {
 
-    /*@Override
-    public void onResponse(@NonNull GetResultList currentResponse) {
-        TrailerList = getTrailerResults();
-        //gridview.setAdapter(new ImageAdapter(MainActivity.this, results));
-    }*/
+        String url = "https://api.themoviedb.org/3/movie/" + option + "/reviews?api_key=";
+        GsonRequest<Reviews> gsonRequest =
+                new GsonRequest<>(url, Reviews.class, null,
+                        new Response.Listener<Reviews>() {
+                            @Override
+                            public void onResponse(Reviews reviews) {
+                                // TODO do next things after response success
+                                Log.d("", "");
+                                ReviewList = reviews.getReviewsResults();
+
+
+                                final RecyclerView listrview = (RecyclerView) findViewById(R.id.reviews_list);
+                                listrview.setAdapter(new ReviewsAdapter(ReviewList));
+                                listrview.setLayoutManager(new LinearLayoutManager(FullImageActivity.this));
+
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO do next things after response error
+                        Log.d("", "");
+                    }
+                });
+        VolleySingleton.getInstance(this).addToRequestQueue(gsonRequest, FullImageActivity.class);
+    }
+
 
     @Override
     protected void onStop() {

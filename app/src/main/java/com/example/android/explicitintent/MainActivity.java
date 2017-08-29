@@ -46,12 +46,8 @@ public class MainActivity extends AppCompatActivity
         implements Response.Listener<GetResultList> {
 
 
-
     private List<Result> results = new ArrayList<>();
     private GridView gridview;
-
-
-
 
 
     @Override
@@ -79,7 +75,7 @@ public class MainActivity extends AppCompatActivity
 
     private void callVolley(String option) {
 
-        String url = "https://api.themoviedb.org/3/movie/"+option+"?api_key=1831fea099b5dc948f71ac983802ac79";
+        String url = "https://api.themoviedb.org/3/movie/" + option + "?api_key=";
         GsonRequest<Movie> gsonRequest =
                 new GsonRequest<>(url, Movie.class, null,
                         new Response.Listener<Movie>() {
@@ -120,17 +116,17 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id==R.id.popular_movie){
+        if (id == R.id.popular_movie) {
             callVolley("popular");
             return true;
-        }
-        else if (id==R.id.top_rated){
+        } else if (id == R.id.top_rated) {
             callVolley("top_rated");
             return true;
-        }else if (id==R.id.favorite){
+        } else if (id == R.id.favorite) {
             loadFavoriteMoviesFromDb();
             return true;
-        };
+        }
+        ;
 
         return super.onOptionsItemSelected(item);
     }

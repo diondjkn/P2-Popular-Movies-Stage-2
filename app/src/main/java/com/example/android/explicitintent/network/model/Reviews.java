@@ -21,7 +21,7 @@ public class Reviews implements Parcelable
     private Integer page;
     @SerializedName("results")
     @Expose
-    private List<Result> results = null;
+    private List<ReviewsResult> reviews_results = null;
     @SerializedName("total_pages")
     @Expose
     private Integer totalPages;
@@ -38,7 +38,7 @@ public class Reviews implements Parcelable
             Reviews instance = new Reviews();
             instance.id = ((Integer) in.readValue((Integer.class.getClassLoader())));
             instance.page = ((Integer) in.readValue((Integer.class.getClassLoader())));
-            in.readList(instance.results, (com.example.android.explicitintent.network.model.Result.class.getClassLoader()));
+            in.readList(instance.reviews_results, (com.example.android.explicitintent.network.model.ReviewsResult.class.getClassLoader()));
             instance.totalPages = ((Integer) in.readValue((Integer.class.getClassLoader())));
             instance.totalResults = ((Integer) in.readValue((Integer.class.getClassLoader())));
             return instance;
@@ -67,12 +67,12 @@ public class Reviews implements Parcelable
         this.page = page;
     }
 
-    public List<Result> getResults() {
-        return results;
+    public List<ReviewsResult> getReviewsResults() {
+        return reviews_results ;
     }
 
-    public void setResults(List<Result> results) {
-        this.results = results;
+    public void setReviewsResults(List<ReviewsResult> reviews_results) {
+        this.reviews_results = reviews_results;
     }
 
     public Integer getTotalPages() {
@@ -94,7 +94,7 @@ public class Reviews implements Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(id);
         dest.writeValue(page);
-        dest.writeList(results);
+        dest.writeList(reviews_results);
         dest.writeValue(totalPages);
         dest.writeValue(totalResults);
     }
