@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -52,13 +53,21 @@ public class FullImageActivity extends AppCompatActivity implements LoaderManage
     private TextView cAverage;
     private MenuItem menuItemFavorite;
     private boolean isFavoriteMovie = false;
+    private static final String BUNDLE_REVIEW_LIST = "review_list";
+    private static final String BUNDLE_VIDEO_LIST = "video_list";
+    private static final String BUNDLE_REVIEW_LAYOUT = "review_layout";
+    private static final String BUNDLE_TRAILER_LAYOUT = "trailer_layout";
+
+
     public static final String KEY_MOVIE_DATA = "movie data";
     private static final int FAVORITE_MOVIE_LOADER_ID = 212;
     private static final String BUNDLE_SCROLL_POSITION = "scroll_position";
     private static Toast toast;
     private List<TrailerResult> TrailerList = new ArrayList<>();
     private List<ReviewsResult> ReviewList = new ArrayList<>();
-
+    RecyclerView listTrailerView;
+    RecyclerView listReviewView;
+    NestedScrollView sv;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,6 +100,11 @@ public class FullImageActivity extends AppCompatActivity implements LoaderManage
         iPoster = (ImageView) findViewById(R.id.poster);
         Picasso.with(this).load("https://image.tmdb.org/t/p/w320" + result.getPosterPath()).into(iPoster);
 
+        listTrailerView = (RecyclerView) findViewById(R.id.trailer_list);
+        listReviewView = (RecyclerView) findViewById(R.id.reviews_list);
+        createTrailerRV();
+        createReviewRV();
+
         callVolleyTrailer(result.getId());
         callVolleyReviews(result.getId());
 
@@ -121,30 +135,59 @@ public class FullImageActivity extends AppCompatActivity implements LoaderManage
 
 //            }
 //        }
+        if(savedInstanceState != null)
+        {
+            Parcelable savedReviewLayoutState = savedInstanceState.getParcelable(BUNDLE_REVIEW_LAYOUT);
+            listReviewView.getLayoutManager().onRestoreInstanceState(savedReviewLayoutState);
+            Parcelable savedTrailerLayoutState = savedInstanceState.getParcelable(BUNDLE_TRAILER_LAYOUT);
+            listTrailerView.getLayoutManager().onRestoreInstanceState(savedTrailerLayoutState);
+        }
 
-        final NestedScrollView sv = (NestedScrollView)findViewById(R.id.fullScrollView);
+        sv = (NestedScrollView)findViewById(R.id.fullScrollView);
+
         if (savedInstanceState != null && savedInstanceState.containsKey(BUNDLE_SCROLL_POSITION)) {
             final int[] scrollPosition = savedInstanceState.getIntArray(BUNDLE_SCROLL_POSITION);
             if (scrollPosition != null && scrollPosition.length == 2) {
-                sv.post(new Runnable() {
+                sv.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        sv.scrollTo(scrollPosition[0], scrollPosition[1]);
+                        sv.smoothScrollTo(scrollPosition[0], scrollPosition[1]);
                     }
-                });
+                }, 1000L);
             }
         }
 
-    }
 
+    }
 
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-
-         NestedScrollView sv = (NestedScrollView)findViewById(R.id.fullScrollView);
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+//        ArrayList<Step> stepsSaved = new ArrayList<>(stepAdapter.getSteps());
+//        if (stepsSaved != null && !stepsSaved.isEmpty()) {
+//            outState.putParcelableArrayList(SAVED_STEPS_KEY, stepsSaved);
+//        }
+        outState.putParcelable(BUNDLE_REVIEW_LAYOUT, listReviewView.getLayoutManager().onSaveInstanceState());
+        outState.putParcelable(BUNDLE_TRAILER_LAYOUT, listTrailerView.getLayoutManager().onSaveInstanceState());
         outState.putIntArray(BUNDLE_SCROLL_POSITION, new int[]{sv.getScrollX(), sv.getScrollY()});
     }
+
+
+
+
+
+//    @Override
+//    protected void onSaveInstanceState(Bundle outState) {
+//        if (TrailerList != null && !TrailerList.isEmpty()) {
+//            //outState.putParcelableArrayList(BUNDLE_VIDEO_LIST, TrailerList);
+//        }
+//        if (ReviewList != null && !ReviewList.isEmpty()) {
+//            //outState.putParcelableArrayList(BUNDLE_REVIEW_LIST, ReviewList);
+//        }
+//         NestedScrollView sv = (NestedScrollView)findViewById(R.id.fullScrollView);
+//        outState.putIntArray(BUNDLE_SCROLL_POSITION, new int[]{sv.getScrollX(), sv.getScrollY()});
+//    }
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
@@ -167,6 +210,7 @@ public class FullImageActivity extends AppCompatActivity implements LoaderManage
                     deleteMovieFromDb();
                 }
                 toggleFavoriteIcon();
+                //sv.smoothScrollTo(0,1000);
             }
         }
         return super.onOptionsItemSelected(item);
@@ -264,7 +308,7 @@ public class FullImageActivity extends AppCompatActivity implements LoaderManage
 
     private void callVolleyTrailer(String option) {
 
-        String url = "https://api.themoviedb.org/3/movie/" + option + "/videos?api_key=1831fea099b5dc948f71ac983802ac79";
+        String url = "https://api.themoviedb.org/3/movie/" + option + "/videos?api_key=";
         GsonRequest<Trailer> gsonRequest =
                 new GsonRequest<>(url, Trailer.class, null,
                         new Response.Listener<Trailer>() {
@@ -273,10 +317,7 @@ public class FullImageActivity extends AppCompatActivity implements LoaderManage
                                 // TODO do next things after response success
                                 Log.d("", "");
                                 TrailerList = trailer.getTrailerResults();
-
-                                final RecyclerView listview = (RecyclerView) findViewById(R.id.trailer_list);
-                                listview.setAdapter(new TrailerAdapter(TrailerList));
-                                listview.setLayoutManager(new LinearLayoutManager(FullImageActivity.this));
+                                createTrailerRV();
 
                             }
                         }, new Response.ErrorListener() {
@@ -290,9 +331,15 @@ public class FullImageActivity extends AppCompatActivity implements LoaderManage
     }
 
 
+    private void createTrailerRV(){
+        listTrailerView.setAdapter(new TrailerAdapter(TrailerList));
+        listTrailerView.setLayoutManager(new LinearLayoutManager(FullImageActivity.this));
+
+    }
+
     private void callVolleyReviews(String option) {
 
-        String url = "https://api.themoviedb.org/3/movie/" + option + "/reviews?api_key=1831fea099b5dc948f71ac983802ac79";
+        String url = "https://api.themoviedb.org/3/movie/" + option + "/reviews?api_key=";
         GsonRequest<Reviews> gsonRequest =
                 new GsonRequest<>(url, Reviews.class, null,
                         new Response.Listener<Reviews>() {
@@ -301,11 +348,7 @@ public class FullImageActivity extends AppCompatActivity implements LoaderManage
                                 // TODO do next things after response success
                                 Log.d("", "");
                                 ReviewList = reviews.getReviewsResults();
-
-
-                                final RecyclerView listrview = (RecyclerView) findViewById(R.id.reviews_list);
-                                listrview.setAdapter(new ReviewsAdapter(ReviewList));
-                                listrview.setLayoutManager(new LinearLayoutManager(FullImageActivity.this));
+                                createReviewRV();
 
                             }
                         }, new Response.ErrorListener() {
@@ -316,6 +359,12 @@ public class FullImageActivity extends AppCompatActivity implements LoaderManage
                     }
                 });
         VolleySingleton.getInstance(this).addToRequestQueue(gsonRequest, FullImageActivity.class);
+    }
+
+    private void createReviewRV(){
+        listReviewView.setAdapter(new ReviewsAdapter(ReviewList));
+        listReviewView.setLayoutManager(new LinearLayoutManager(FullImageActivity.this));
+
     }
 
     @Override
