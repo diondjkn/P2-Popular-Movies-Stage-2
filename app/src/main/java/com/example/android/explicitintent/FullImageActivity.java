@@ -8,6 +8,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.content.res.ResourcesCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -53,6 +54,7 @@ public class FullImageActivity extends AppCompatActivity implements LoaderManage
     private boolean isFavoriteMovie = false;
     public static final String KEY_MOVIE_DATA = "movie data";
     private static final int FAVORITE_MOVIE_LOADER_ID = 212;
+    private static final String BUNDLE_SCROLL_POSITION = "scroll_position";
     private static Toast toast;
     private List<TrailerResult> TrailerList = new ArrayList<>();
     private List<ReviewsResult> ReviewList = new ArrayList<>();
@@ -70,6 +72,8 @@ public class FullImageActivity extends AppCompatActivity implements LoaderManage
             actionBar.setDisplayHomeAsUpEnabled(true);
 
         }
+
+
 
 
         cTitle = (TextView) findViewById(R.id.title);
@@ -90,10 +94,57 @@ public class FullImageActivity extends AppCompatActivity implements LoaderManage
         callVolleyTrailer(result.getId());
         callVolleyReviews(result.getId());
 
+ //       android:nestedScrollingEnabled="true"
+
+         //final NestedScrollView sv = (NestedScrollView)findViewById(R.id.fullScrollView);
+        //sv.fullScroll(sv.getBottom());
+        //sv.scrollTo(0, 1200);
+        //sv.scrollBy(0, 100);
+//        sv.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                sv.scrollTo(0, 1000);
+//            }
+//        });
+
+//        if (savedInstanceState != null && savedInstanceState.containsKey(BUNDLE_SCROLL_POSITION)) {
+//            final int[] scrollPosition = savedInstanceState.getIntArray(BUNDLE_SCROLL_POSITION);
+//            if (scrollPosition != null && scrollPosition.length == 2) {
+
+//                scrollView.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        scrollView.scrollTo(0, 100);
+//                    }
+//                }
+//                );
+
+//            }
+//        }
+
+        final NestedScrollView sv = (NestedScrollView)findViewById(R.id.fullScrollView);
+        if (savedInstanceState != null && savedInstanceState.containsKey(BUNDLE_SCROLL_POSITION)) {
+            final int[] scrollPosition = savedInstanceState.getIntArray(BUNDLE_SCROLL_POSITION);
+            if (scrollPosition != null && scrollPosition.length == 2) {
+                sv.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        sv.scrollTo(scrollPosition[0], scrollPosition[1]);
+                    }
+                });
+            }
+        }
+
     }
 
 
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+
+         NestedScrollView sv = (NestedScrollView)findViewById(R.id.fullScrollView);
+        outState.putIntArray(BUNDLE_SCROLL_POSITION, new int[]{sv.getScrollX(), sv.getScrollY()});
+    }
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
@@ -213,7 +264,7 @@ public class FullImageActivity extends AppCompatActivity implements LoaderManage
 
     private void callVolleyTrailer(String option) {
 
-        String url = "https://api.themoviedb.org/3/movie/" + option + "/videos?api_key=";
+        String url = "https://api.themoviedb.org/3/movie/" + option + "/videos?api_key=1831fea099b5dc948f71ac983802ac79";
         GsonRequest<Trailer> gsonRequest =
                 new GsonRequest<>(url, Trailer.class, null,
                         new Response.Listener<Trailer>() {
@@ -241,7 +292,7 @@ public class FullImageActivity extends AppCompatActivity implements LoaderManage
 
     private void callVolleyReviews(String option) {
 
-        String url = "https://api.themoviedb.org/3/movie/" + option + "/reviews?api_key=";
+        String url = "https://api.themoviedb.org/3/movie/" + option + "/reviews?api_key=1831fea099b5dc948f71ac983802ac79";
         GsonRequest<Reviews> gsonRequest =
                 new GsonRequest<>(url, Reviews.class, null,
                         new Response.Listener<Reviews>() {
@@ -267,6 +318,12 @@ public class FullImageActivity extends AppCompatActivity implements LoaderManage
         VolleySingleton.getInstance(this).addToRequestQueue(gsonRequest, FullImageActivity.class);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
+    }
 
     @Override
     protected void onStop() {

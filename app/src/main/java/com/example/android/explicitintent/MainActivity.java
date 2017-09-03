@@ -15,7 +15,9 @@
  */
 package com.example.android.explicitintent;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -68,14 +70,22 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        callVolley("popular");
+
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        String sortby = sharedPref.getString("SORT_TYPE", "popular");
+
+        if (sortby == "favorite") {
+            loadFavoriteMoviesFromDb();
+        } else {
+            callVolley(sortby);
+        }
 
 
     }
 
     private void callVolley(String option) {
 
-        String url = "https://api.themoviedb.org/3/movie/" + option + "?api_key=";
+        String url = "https://api.themoviedb.org/3/movie/" + option + "?api_key=1831fea099b5dc948f71ac983802ac79";
         GsonRequest<Movie> gsonRequest =
                 new GsonRequest<>(url, Movie.class, null,
                         new Response.Listener<Movie>() {
@@ -107,6 +117,19 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        String sortby = sharedPref.getString("SORT_TYPE", "popular");
+
+        if (sortby == "favorite") {
+            loadFavoriteMoviesFromDb();
+        }
+
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater()
                 .inflate(R.menu.main_activity_menu, menu);
@@ -115,18 +138,30 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        String sortby = "popular";
         int id = item.getItemId();
         if (id == R.id.popular_movie) {
-            callVolley("popular");
+            sortby = "popular";
+            SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+            //sortBy = sharedPref
+            sharedPref.edit().putString("SORT_TYPE", sortby).apply();
+            callVolley(sortby);
             return true;
         } else if (id == R.id.top_rated) {
-            callVolley("top_rated");
+            sortby = "top_rated";
+            SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+            sharedPref.edit().putString("SORT_TYPE", sortby).apply();
+            callVolley(sortby);
             return true;
         } else if (id == R.id.favorite) {
+            sortby = "favorite";
+            SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+            sharedPref.edit().putString("SORT_TYPE", sortby).apply();
             loadFavoriteMoviesFromDb();
             return true;
         }
         ;
+
 
         return super.onOptionsItemSelected(item);
     }
