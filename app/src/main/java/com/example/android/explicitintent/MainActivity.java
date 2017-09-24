@@ -27,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ScrollView;
 
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
@@ -48,8 +49,12 @@ public class MainActivity extends AppCompatActivity
         implements Response.Listener<GetResultList> {
 
 
+
     private List<Result> results = new ArrayList<>();
     private GridView gridview;
+    private static final String BUNDLE_SCROLL_POSITION = "scroll_position";
+    //NestedScrollView sv0;
+    ScrollView sv0;
 
 
     @Override
@@ -60,6 +65,7 @@ public class MainActivity extends AppCompatActivity
 
 
         gridview = (GridView) findViewById(R.id.gridview);
+        gridview.getLastVisiblePosition();
         gridview.setAdapter(new ImageAdapter(this, results));
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
@@ -80,7 +86,32 @@ public class MainActivity extends AppCompatActivity
             callVolley(sortby);
         }
 
+//        sv0 = (ScrollView) findViewById(R.id.fullScrollView);
+//
+        if (savedInstanceState != null && savedInstanceState.containsKey(BUNDLE_SCROLL_POSITION)) {
+            final int scrollPosition = savedInstanceState.getInt(BUNDLE_SCROLL_POSITION);
+            if (scrollPosition >= 0 ) {
+                gridview.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //gridview.scrollTo(scrollPosition[0], scrollPosition[1]);
+                        gridview.smoothScrollToPosition(scrollPosition);
+                    }
+                }, 1000L);
+            }
+        }
 
+    }
+
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+
+        //outState.putIntArray(BUNDLE_SCROLL_POSITION, new int[]{gridview.getScrollX(), gridview.getScrollY()});
+        outState.putInt(BUNDLE_SCROLL_POSITION, gridview.getFirstVisiblePosition());
     }
 
     private void callVolley(String option) {
